@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alinhamento de Campo RNC / SIT</title>
+  <style>
+    :root{
+      --bg:#fe5900;--card:#ffffff;--ink:#1f2937;--muted:#80766b;--brown:#2154b8;--caramel:#ff7206;
+      --olive:#556b2f;--orange:#ea580c;--purple:hwb(20 0% 0%);--line:#e5e7eb;--danger:#be123c;--ok:#166534;
+    }
+    *{box-sizing:border-box} body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:linear-gradient(135deg,#f6f2ea,#fffaf3 55%,#f4f0ff);color:var(--ink)}
+    header{padding:28px 18px 16px;background:linear-gradient(135deg,var(--brown),#2f3b2f);color:white;box-shadow:0 10px 30px rgba(0,0,0,.16)}
+    .wrap{max-width:1180px;margin:0 auto}.brand{display:flex;gap:18px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+    h1{margin:0;font-size:clamp(24px,4vw,42px);letter-spacing:-.03em}.sub{margin:8px 0 0;color:#fef3c7;font-weight:600}
+    .pill{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.2);padding:10px 14px;border-radius:999px;font-weight:700}
+    main{padding:26px 18px 54px}.grid{display:grid;grid-template-columns:1fr;gap:18px}@media(min-width:920px){.grid.two{grid-template-columns:1.35fr .65fr}}
+    .card{background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:22px;box-shadow:0 18px 45px rgba(88,64,35,.12);padding:22px;backdrop-filter:blur(8px)}
+    .card h2{margin:0 0 16px;font-size:22px;color:var(--brown)}.section-title{margin:26px 0 12px;font-weight:900;color:#2f3b2f;border-left:6px solid var(--caramel);padding-left:10px;text-transform:uppercase;font-size:14px;letter-spacing:.08em}
+    label{font-size:13px;font-weight:800;color:#374151;display:block;margin:0 0 7px}.row{display:grid;grid-template-columns:1fr;gap:14px}@media(min-width:740px){.row.c2{grid-template-columns:repeat(2,1fr)}.row.c3{grid-template-columns:repeat(3,1fr)}.row.c4{grid-template-columns:repeat(4,1fr)}}
+    input,select,textarea{width:100%;border:1px solid #d1d5db;background:#fff;border-radius:14px;padding:12px 13px;font-size:15px;outline:none;transition:.18s;box-shadow:0 1px 0 rgba(0,0,0,.02)}
+    input:focus,select:focus,textarea:focus{border-color:var(--orange);box-shadow:0 0 0 4px rgba(234,88,12,.13)} textarea{min-height:100px;resize:vertical}.big textarea{min-height:180px}
+    .radio{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.choice{display:flex;gap:8px;align-items:center;background:#f9fafb;border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-weight:800}.choice input{width:auto}.hint{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.45}
+    table{border-collapse:collapse;width:100%;overflow:hidden;border-radius:14px} th,td{border:1px solid var(--line);padding:9px;text-align:left;vertical-align:top} th{background:#f3f4f6;color:#374151;font-size:12px;text-transform:uppercase;letter-spacing:.04em}td input{border:0;border-radius:8px;padding:8px;background:#fff}
+    .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}.btn{border:0;border-radius:15px;padding:13px 18px;font-weight:900;cursor:pointer;font-size:15px;box-shadow:0 10px 22px rgba(0,0,0,.12);transition:.15s}.btn:hover{transform:translateY(-1px)}.primary{background:linear-gradient(135deg,var(--orange),var(--caramel));color:#fff}.secondary{background:#fff;color:var(--brown);border:1px solid #d6c7b6}.danger{background:#fff1f2;color:var(--danger);border:1px solid #fecdd3}.ok{background:#ecfdf5;color:var(--ok);border:1px solid #bbf7d0}
+    .kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}@media(min-width:740px){.kpis{grid-template-columns:repeat(4,1fr)}}.kpi{border-radius:18px;background:linear-gradient(135deg,#fff7ed,#f0fdf4);padding:16px;border:1px solid #eadfd0}.kpi .n{font-size:30px;font-weight:950;color:#5b3a29}.kpi .t{font-size:12px;font-weight:900;color:#6b7280;text-transform:uppercase;letter-spacing:.06em}
+    .mini{max-height:430px;overflow:auto}.mini table{font-size:13px}.badge{display:inline-flex;padding:5px 9px;border-radius:999px;background:#fef3c7;color:#646160;font-weight:900;font-size:12px}.okbadge{background:#dcfce7;color:#166534}.badgeb{background:#ede9fe;color:#6d28d9}.alert{background:#fff7ed;border:1px dashed #f59e0b;color:#92400e;border-radius:15px;padding:13px;margin:12px 0;line-height:1.5}.qr{display:flex;gap:16px;align-items:center;flex-wrap:wrap}.qr img{width:150px;height:150px;border:8px solid white;border-radius:16px;box-shadow:0 10px 25px rgba(0,0,0,.12)}
+    footer{color:#6b7280;text-align:center;font-size:12px;margin-top:22px}.required:after{content:" *";color:#dc2626}
+    .photo-box{border:2px dashed #d6c7b6;background:#fffaf3;border-radius:18px;padding:16px;margin-top:14px}
+    .photo-box input[type=file]{padding:10px;background:#fff}
+    .photo-preview{display:grid;grid-template-columns:repeat(auto-fill,minmax(105px,1fr));gap:12px;margin-top:12px}
+    .thumb{border:1px solid #eadfd0;border-radius:14px;background:#fff;overflow:hidden;box-shadow:0 8px 18px rgba(88,64,35,.12)}
+    .thumb img{width:100%;height:82px;object-fit:cover;display:block}.thumb .cap{font-size:11px;color:#6b7280;padding:7px;word-break:break-word}
+  </style>
+</head>
+<body>
+  <header>
+  <div class="wrap brand">
+
+    <div style="display:flex; align-items:center; gap:20px;">
+
+      <img src="Enesa.jpg"
+           alt="Enesa"
+           style="width:120px; height:auto; border-radius:0px;">
+
+      <div>
+        <h1>Alinhamento de Campo RNC / SIT</h1>
+        <p class="sub">
+          Formulário eletrônico com controle, exportação e preparação para QR Code
+        </p>
+      </div>
+
+    </div>
+
+    <div class="pill">Qualidade • Campo • Engenharia</div>
+
+  </div>
+</header>
+  <main class="wrap">
+    <div class="grid two">
+      <section class="card">
+        <h2>Registro do Formulário</h2> 
+        <form id="acForm">
+          <div>
+    <label>Nº AC/RNC/SIT</label>
+    <input name="numero" readonly placeholder="Gerado automaticamente">
+</div>
+            <div><label class="required">Tipo de Documento</label><select name="tipo" required><option value="">Selecione</option><option>RNC</option><option>SIT</option></select></div>
+            <div><label>Data do Documento</label><input type="date" name="dataDocumento"></div>
+            <div><label>Status</label><select name="status"><option>Aberto</option><option>Em andamento</option><option>Aguardando aprovação</option><option>Concluído</option><option>Cancelado</option></select></div>
+          </div>
+          <aside style="margin-top:15px;"></aside>
+          <div class="row c3">
+            <div><label class="required">Contratada</label><input name="contratada" required value="ENESA" readonly></div>
+            <div><label>Contrato / Pacote</label><input name="contrato" value="Pacote 12445-B" readonly="Pacote 12445-B"></div>
+            <div><label>Disciplina</label><select name="disciplina"><option>Qualidade</option><option>Engenharia</option><option>Planejamento</option><option>Campo</option><option>Cliente/Vale</option><option>Fornecedor</option><option>Segurança</option><option>Produção</option><option>Outros</option></select></div>
+          </div>
+          <div class="section-title">Escopo e Impactos</div>
+          <div class="row c2">
+            <div><label>Assunto</label><input name="assunto" placeholder="Assunto principal"></div>
+            <div><label class="required">Área</label><select name="area" required><option value="">Selecione</option><option>Tubulação</option><option>Mecânica</option><option>Civil</option><option>Elétrica</option><option>Instrumentação</option><option>Montagem</option><option>Comissionamento</option><option>Segurança</option><option>Qualidade</option><option>Planejamento</option><option>Outros</option></select></div>
+          </div>
+          <div class="row c2">
+            <div><label>Impacta outra disciplina?</label><div class="radio"><label class="choice"><input type="radio" name="impactaDisc" value="SIM"> SIM</label><label class="choice"><input type="radio" name="impactaDisc" value="NÃO" checked> NÃO</label></div><input name="qualDisciplina" placeholder="Qual disciplina?" style="margin-top:10px"></div>
+            <div><label>Impacta custo / prazo?</label><div class="radio"><label class="choice"><input type="radio" name="impactaCusto" value="SIM"> SIM</label><label class="choice"><input type="radio" name="impactaCusto" value="NÃO" checked> NÃO</label></div><input name="qualImpacto" placeholder="Qual impacto?" style="margin-top:10px"></div>
+          </div>
+          <div class="section-title">Descrição e Referências</div>
+          <div class="big"><label class="required">Descrição</label><textarea name="descricao" required placeholder="Descreva claramente a ocorrência, condição de campo, divergência, necessidade de alinhamento ou oportunidade de melhoria."></textarea></div>
+          <label style="margin-top:14px">Documentos de Referência</label>
+          <table id="docs"><thead><tr><th>Nº Documento</th><th>Rev.</th><th></thead><tbody>
+            <tr><td><input name="doc1"></td><td><input name="rev1"></td>
+            <tr><td><input name="doc2"></td><td><input name="rev2"></td>
+            <tr><td><input name="doc3"></td><td><input name="rev3"></td>
+            <tr><td><input name="doc4"></td><td><input name="rev4"></td>
+          </tbody></table>
+          <div class="section-title">Tratativa</div>
+          <div class="big"><label>Solução Proposta</label><textarea name="solucao" placeholder="Descreva a solução proposta, alternativa técnica, ajuste de campo ou encaminhamento recomendado."></textarea></div>
+          <div class="row c2">
+            <div><label>Originado Por</label><input name="originadoPor" list="originadoPorList" placeholder="Selecione ou digite um novo"><datalist id="originadoPorList"><option value="BRAFER"></option><option value="EMALTO"></option><option value="TECNOKOR"></option><option value="METSO"></option><option value="TMSA"></option><option value="VALE"></option><option value="ENESA"></option><option value="CODEME"></option><option value="KEDA"></option><option value="LAVALIN"></option><option value="SANDVIX"></option><option value="SIEMENS"></option><option value="SOLISTEEL"></option><option value="TENAX"></option><option value="SCHENKPROCESS"></option></datalist><p class="hint">Lista sugerida. Também é permitido digitar um novo nome.</p></div>
+            <div><label>Necessária criação de Solicitação de Mudança (SM)?</label><div class="radio"><label class="choice"><input type="radio" name="sm" value="SIM"> SIM</label><label class="choice"><input type="radio" name="sm" value="NÃO" checked> NÃO</label></div></div>
+          </div>
+          <div><label>Comentários ou Recomendações Adicionais</label><textarea name="comentarios" placeholder="Observações complementares, recomendações, restrições, evidências ou alinhamentos."></textarea></div>
+          <div class="section-title">Fotos / Evidências</div>
+          <div class="photo-box">
+            <label>Adicionar fotos da ocorrência ou evidência</label>
+
+              <input 
+                type="file" 
+                id="Arquivo" 
+                name="fotos"
+                accept="image/*" 
+                multiple capture="/">
+
+            <p class="hint">Você pode anexar fotos tiradas pelo celular ou imagens já salvas. Para uso multiusuário, publique o formulário com o Apps Script atualizado para salvar as fotos no Drive e registrar os links na planilha.</p>
+            <div id="fotoPreview" class="photo-preview"></div>
+            <button class="btn secondary" type="button" onclick="clearPhotos()" style="margin-top:12px">Limpar Fotos</button>
+          </div>
+          <div class="section-title">Aprovações</div>
+          <div class="row c3">
+            <div>
+  <label>Qualidade - Nome</label>
+
+  <select name="qualNome">
+    <option value="">Selecione</option>
+    <option>WELISCLEY NASCIMENTO </option>
+    <option>JEFERSON SILVA</option>
+    <option>GILVAN MEDEIROS</option>
+    <option>LEANDRO REIS</option>
+    <option>MATEUS CUNHA</option>
+    <option>JAMES FERNANDES</option>
+    <option>MARCUS SANTOS</option>
+    <option>JONES PERES</option>
+    <option>LUCAS VIEIRA</option>
+    <option>FILIPE MARTINS</option>
+    <option>ERICK LINHARES</option>
+    <option>LEONARDO BARBOSA</option>
+    <option>TAINARA OLIVEIRA</option>
+    <option>SAMUEL MACEDO</option>
+    <option>MICHELE PEREIRA</option>
+    <option>FILIPE SALOMAO</option>
+
+  </select>
+
+    <input type="date" name="qualData" style="margin-top:8px">
+     </div>
+          <div><label>Fornecedor / Engenharia de Campo - Nome</label><input name="fornNome"><input type="date" name="fornData" style="margin-top:8px"></div>
+          <div><label>Fiscalização Vale - Nome</label><input name="valeNome"><input type="date" name="valeData" style="margin-top:8px"></div>
+          </div>
+          <div class="section-title">Controle</div>
+          <div class="row c4">
+            <div><label>Responsável</label><input name="responsavel" placeholder="Responsável pela ação"></div>
+            <div><label>Prazo</label><input type="date" name="prazo"></div>
+            <div><label>Prioridade</label><select name="prioridade"><option>Média</option><option>Alta</option><option>Crítica</option><option>Baixa</option></select></div>
+            <div><label>Link da Evidência</label><input name="evidencia" placeholder="URL, pasta ou evidência"></div>
+          </div>
+          <div><label>Observações do Controle</label><textarea name="obsControle" placeholder="Observações de acompanhamento, pendências ou conclusão."></textarea></div>
+          <div class="actions"><button class="btn primary" type="submit">Salvar Registro</button><button class="btn ok" type="button" onclick="window.print()">Imprimir</button><button class="btn danger" type="button" onclick="clearFormOnly()">Limpar Formulário</button></div>
+        </form>
+      </section>
+      <aside class="card" style="margin-top:40px;">
+    <h2>QR Code</h2>
+
+    <div class="qr">
+        <img src="qr_code_ac_rnc_sit.png" alt="QR Code">
+
+        <div>
+            <span class="badge">Acesso ao Formulário</span>
+
+            <p class="hint">
+                Escaneie o QR Code para acessar este formulário.
+            </p>
+        </div>
+    </div>
+</aside>
+    </div>
+    <footer>Modelo eletrônico gerado a partir do formulário “Alinhamento de Campo RNC / SIT”.</footer>
+  </main>
+<script>
+const ENDPOINT = "https://script.google.com/macros/s/AKfycbxPMDhqp5fbteQeg-KkI84LSiwr2YvV0rs1UOBA3sq28KcmKbfere_pXEomTvg9M1Sm/exec";
+let selectedPhotos = [];
+const MAX_PHOTOS = 8;
+const MAX_PHOTO_MB = 7;
+const headers = ["ID","Data Registro","Nº AC/RNC/SIT","Tipo Documento","Contratada","Contrato","Data Documento","Escopo","Área","Assunto","Impacta Outra Disciplina?","Qual Disciplina","Impacta Custo/Prazo?","Qual Impacto","Descrição","Docs Referência","Solução Proposta","Originado Por","Disciplina","Comentários/Recomendações","Necessita SM?","Qualidade - Nome","Qualidade - Data","Fornecedor/Engenharia - Nome","Fornecedor/Engenharia - Data","Fiscalização Vale - Nome","Fiscalização Vale - Data","Status","Responsável","Prazo","Dias em Aberto","Prioridade","Link Evidência","Observações Controle","Fotos - Qtd","Fotos - Nomes","Links das Fotos"];
+function nowLocal(){const d=new Date();return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,19).replace('T',' ')}
+function id(){const d=new Date();const pad=n=>String(n).padStart(2,'0');return `AC-${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}-${pad(d.getHours())}${pad(d.getMinutes())}${pad(d.getSeconds())}`}
+function val(fd,n){return (fd.get(n)||'').toString().trim()}
+function docs(fd){let out=[];for(let i=1;i<=4;i++){let d=val(fd,'doc'+i),r=val(fd,'rev'+i),t=val(fd,'tit'+i);if(d||r||t)out.push(`${d} | Rev. ${r} | ${t}`)}return out.join('\n')}
+function diasAbertos(data,status){if(!data||status==='Concluído')return 0;let ini=new Date(data.replace(' ','T'));let ms=Date.now()-ini.getTime();return Math.max(0,Math.floor(ms/86400000))}
+function collect(){const fd=new FormData(document.getElementById('acForm'));const dataReg=nowLocal();const status=val(fd,'status')||'Aberto';const fotosNomes=selectedPhotos.map(f=>f.name).join('\n');return {
+"ID":id(),"Data Registro":dataReg,"Nº AC/RNC/SIT":val(fd,'numero'),"Tipo Documento":val(fd,'tipo'),"Contratada":val(fd,'contratada'),"Contrato":val(fd,'contrato'),"Data Documento":val(fd,'dataDocumento'),"Escopo":val(fd,'escopo'),"Área":val(fd,'area'),"Assunto":val(fd,'assunto'),"Impacta Outra Disciplina?":val(fd,'impactaDisc'),"Qual Disciplina":val(fd,'qualDisciplina'),"Impacta Custo/Prazo?":val(fd,'impactaCusto'),"Qual Impacto":val(fd,'qualImpacto'),"Descrição":val(fd,'descricao'),"Docs Referência":docs(fd),"Solução Proposta":val(fd,'solucao'),"Originado Por":val(fd,'originadoPor'),"Disciplina":val(fd,'disciplina'),"Comentários/Recomendações":val(fd,'comentarios'),"Necessita SM?":val(fd,'sm'),"Qualidade - Nome":val(fd,'qualNome'),"Qualidade - Data":val(fd,'qualData'),"Fornecedor/Engenharia - Nome":val(fd,'fornNome'),"Fornecedor/Engenharia - Data":val(fd,'fornData'),"Fiscalização Vale - Nome":val(fd,'valeNome'),"Fiscalização Vale - Data":val(fd,'valeData'),"Status":status,"Responsável":val(fd,'responsavel'),"Prazo":val(fd,'prazo'),"Dias em Aberto":diasAbertos(dataReg,status),"Prioridade":val(fd,'prioridade'),"Link Evidência":val(fd,'evidencia'),"Observações Controle":val(fd,'obsControle'),"Fotos - Qtd":selectedPhotos.length,"Fotos - Nomes":fotosNomes,"Links das Fotos":"","Fotos - Arquivos":selectedPhotos
+}}
+document.getElementById('acForm').addEventListener('submit',async e=>{e.preventDefault();const rec=collect();const resposta = await sendOnline(rec);
+
+alert(
+    "Registro salvo!\n\n"+
+    "Número: "+resposta.numero+
+    "\nPDF criado com sucesso."
+)
+;e.target.reset();clearPhotos();document.querySelector('[name="status"]').value='Aberto';document.querySelector('[name="disciplina"]').value='Qualidade';document.querySelector('[name="prioridade"]').value='Média';});
+function renderPhotoPreview() {
+
+    const box = document.getElementById("fotoPreview");
+
+    if (selectedPhotos.length === 0) {
+        box.innerHTML = '<p class="hint">Nenhuma foto selecionada.</p>';
+        return;
+    }
+
+    box.innerHTML = selectedPhotos.map(f => `
+        <div class="thumb">
+            <img src="${f.data}" alt="${esc(f.name)}">
+            <div class="cap">${esc(f.name)}</div>
+        </div>
+    `).join("");
+
+}
+function fileToDataURL(file){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve({name:file.name,mimeType:file.type||'image/jpeg',size:file.size,data:reader.result});reader.onerror=reject;reader.readAsDataURL(file)})}
+document.getElementById('fotoInput').addEventListener('change',async e=>{const files=[...e.target.files].slice(0,MAX_PHOTOS);const allowed=files.filter(f=>f.size<=MAX_PHOTO_MB*1024*1024);if(files.length>allowed.length)alert(`Algumas fotos acima de ${MAX_PHOTO_MB} MB foram ignoradas.`);selectedPhotos=await Promise.all(allowed.map(fileToDataURL));renderPhotoPreview()});
+function render(){const list=records();document.getElementById('kTotal').textContent=list.length;document.getElementById('kRnc').textContent=list.filter(x=>x['Tipo Documento']==='RNC').length;document.getElementById('kSit').textContent=list.filter(x=>x['Tipo Documento']==='SIT').length;document.getElementById('kSm').textContent=list.filter(x=>x['Necessita SM?']==='SIM').length;document.getElementById('lastRows').innerHTML=list.slice(0,12).map(r=>`<tr><td>${esc(r.ID)}</td><td><span class="badgeb badge">${esc(r['Tipo Documento'])}</span></td><td>${esc(r['Área'])}</td><td><span class="${r.Status==='Concluído'?'okbadge':'badge'}">${esc(r.Status)}</span></td></tr>`).join('')||'<tr><td colspan="4">Nenhum registro local.</td></tr>'}
+function esc(s){return (s??'').toString().replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function csvCell(v){v=(v??'').toString().replace(/"/g,'""');return `"${v}"`}
+function clearFormOnly(){document.getElementById('acForm').reset();clearPhotos();document.querySelector('[name="status"]').value='Aberto';document.querySelector('[name="disciplina"]').value='Qualidade';document.querySelector('[name="prioridade"]').value='Média';document.querySelector('[name="contrato"]').value='Pacote 12445-B'}
+function clearRecords(){if(confirm('Apagar todos os registros salvos neste navegador?'))setRecords([])}
+function clearPhotos() {
+
+    // Limpa o array
+    selectedPhotos = [];
+
+    // Limpa o preview
+    document.getElementById("fotoPreview").innerHTML =
+        '<p class="hint">Nenhuma foto selecionada.</p>';
+
+    // Limpa o input de arquivo
+    const oldInput = document.getElementById("fotoInput");
+
+    const newInput = oldInput.cloneNode(true);
+
+    oldInput.parentNode.replaceChild(newInput, oldInput);
+
+    // Recria o evento do input
+    newInput.addEventListener("change", async function (e) {
+
+        const files = [...e.target.files].slice(0, MAX_PHOTOS);
+
+        const allowed = files.filter(
+            f => f.size <= MAX_PHOTO_MB * 1024 * 1024
+        );
+
+        if (files.length > allowed.length) {
+            alert(`Algumas fotos acima de ${MAX_PHOTO_MB} MB foram ignoradas.`);
+        }
+
+        selectedPhotos = await Promise.all(
+            allowed.map(fileToDataURL)
+        );
+
+        renderPhotoPreview();
+
+    });
+
+}async function sendOnline(rec) {
+
+    try {
+
+        await fetch(ENDPOINT, {
+            method: "POST",
+            headers: {
+                "Content-Type": "text/plain;charset=utf-8"
+            },
+            body: JSON.stringify(rec)
+        });
+
+        return true;
+
+    } catch (e) {
+
+        console.error("Erro:", e);
+
+        return false;
+
+    }
+
+}
+(function init(){
+
+    document.querySelector('[name="dataDocumento"]').value =
+        new Date().toISOString().slice(0,10);
+
+    document.querySelector('[name="contrato"]').value =
+        'Pacote 12445-B';
+
+    renderPhotoPreview();
+
+})();
+</script>
+<form action="https://script.google.com/macros/s/AKfycbxPMDhqp5fbteQeg-KkI84LSiwr2YvV0rs1UOBA3sq28KcmKbfere_pXEomTvg9M1Sm/exec" method="post"></form>
+</body>
+</html>
