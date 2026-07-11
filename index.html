@@ -196,7 +196,7 @@ alert(
     "Número: "+resposta.numero+
     "\nPDF criado com sucesso."
 )
-;e.target.reset();clearPhotos();document.querySelector('[name="status"]').value='Aberto';document.querySelector('[name="disciplina"]').value='Qualidade';document.querySelector('[name="prioridade"]').value='Média';});
+;e.target.reset();clearPhotos();('[name="status"]').value='Aberto';document.querySelector('[name="disciplina"]').value='Qualidade';document.querySelector('[name="prioridade"]').value='Média';});
 function renderPhotoPreview() {
 
     const box = document.getElementById("fotoPreview");
@@ -304,6 +304,7 @@ function clearPhotos() {
     renderPhotoPreview();
 
 })();
+  document.querySelector('[name="numero"]').value = id();
 </script>
 <form action="https://script.google.com/macros/s/AKfycbxPMDhqp5fbteQeg-KkI84LSiwr2YvV0rs1UOBA3sq28KcmKbfere_pXEomTvg9M1Sm/exec" method="post"></form>
 </body>
