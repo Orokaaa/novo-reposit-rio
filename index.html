@@ -180,7 +180,7 @@ const ENDPOINT = "https://script.google.com/macros/s/AKfycbwxdBErPdaJ3An1GwiCk8x
 let selectedPhotos = [];
 const MAX_PHOTOS = 8;
 const MAX_PHOTO_MB = 7;
-const headers = ["ID","Data Registro","Nº AC/RNC/SIT","Tipo Documento","Contratada","Contrato","Data Documento","Escopo","Área","Assunto","Impacta Outra Disciplina?","Qual Disciplina","Impacta Custo/Prazo?","Qual Impacto","Descrição","Docs Referência","Solução Proposta","Originado Por","Disciplina","Comentários/Recomendações","Necessita SM?","Qualidade - Nome","Qualidade - Data","Fornecedor/Engenharia - Nome","Fornecedor/Engenharia - Data","Fiscalização Vale - Nome","Fiscalização Vale - Data","Status","Responsável","Prazo","Dias em Aberto","Prioridade","Link Evidência","Observações Controle","Fotos - Qtd","Fotos - Nomes","Links das Fotos"];
+const headers = ["ID","Data Registro","Nº AC/RNC/SIT","Tipo Documento","Contratada","Contrato","Data Documento","Escopo","Área","Assunto","Impacta Outra Disciplina?","Qual Disciplina","Impacta Custo/Prazo?","Qual Impacto","Descrição","Docs Referência","Solução Proposta","Originado Por","Disciplina","Comentários/Recomendações","Necessita SM?","Qualidade - Nome","Qualidade - Data","Fornecedor/Engenharia - Nome","Fornecedor/Engenharia - Data","Fiscalização Vale - Nome","Fiscalização Vale - Data","Status","Responsável","Prazo","Dias em Aberto","Prioridade","Link Evidência","Observações Controle","Fotos - Qtd","Fotos - Nomes","Links das Fotos","PDF"];
 function nowLocal(){const d=new Date();return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,19).replace('T',' ')}
 function id(){const d=new Date();const pad=n=>String(n).padStart(2,'0');return `AC-${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}-${pad(d.getHours())}${pad(d.getMinutes())}${pad(d.getSeconds())}`}
 function val(fd,n){return (fd.get(n)||'').toString().trim()}
@@ -192,11 +192,10 @@ function collect(){const fd=new FormData(document.getElementById('acForm'));cons
 document.getElementById('acForm').addEventListener('submit',async e=>{e.preventDefault();const rec=collect();const resposta = await sendOnline(rec);
 
 alert(
-    "Registro salvo!\n\n"+
-    "Número: "+resposta.numero+
-    "\nPDF criado com sucesso."
-)
-;e.target.reset();clearPhotos();('[name="status"]').value='Aberto';document.querySelector('[name="disciplina"]').value='Qualidade';document.querySelector('[name="prioridade"]').value='Média';});
+    "Registro salvo!\n\n" +
+    "Número: " + resposta.numero +
+    "\nPDF: " + resposta.pdf
+);e.target.reset();clearPhotos();('[name="status"]').value='Aberto';document.querySelector('[name="disciplina"]').value='Qualidade';document.querySelector('[name="prioridade"]').value='Média';});
 function renderPhotoPreview() {
 
     const box = document.getElementById("fotoPreview");
@@ -258,13 +257,8 @@ function clearPhotos() {
 
     });
 
-}async function sendOnline(rec) {
-
-    console.log("OBJETO ENVIADO:");
-    console.log(rec);
-
-    console.log("JSON:");
-    console.log(JSON.stringify(rec));
+}
+  async function sendOnline(rec) {
 
     try {
 
@@ -276,23 +270,24 @@ function clearPhotos() {
             body: JSON.stringify(rec)
         });
 
-        const txt = await response.text();
+        const json = await response.json();
 
         console.log("RESPOSTA APPS SCRIPT:");
-        console.log(txt);
+        console.log(json);
 
-        return txt;
+        return json;
 
     } catch (e) {
 
-        console.error("ERRO FETCH:");
         console.error(e);
 
-        return false;
-
+        return {
+            ok:false,
+            error:e.toString()
+        };
     }
-
 }
+  
 (function init(){
 
     document.querySelector('[name="dataDocumento"]').value =
