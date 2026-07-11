@@ -176,7 +176,7 @@
     <footer>Modelo eletrônico gerado a partir do formulário “Alinhamento de Campo RNC / SIT”.</footer>
   </main>
 <script>
-const ENDPOINT = "https://script.google.com/macros/s/AKfycbxPMDhqp5fbteQeg-KkI84LSiwr2YvV0rs1UOBA3sq28KcmKbfere_pXEomTvg9M1Sm/exec";
+const ENDPOINT = "https://script.google.com/macros/s/AKfycbwxdBErPdaJ3An1GwiCk8xgrqFIQcC9gZJvpZ_pqVCHKl3g6xAYgXnygtZh256ZCDR6/exec";
 let selectedPhotos = [];
 const MAX_PHOTOS = 8;
 const MAX_PHOTO_MB = 7;
@@ -271,7 +271,7 @@ function clearPhotos() {
         const response = await fetch(ENDPOINT, {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "text/plain;charset=utf-8"
             },
             body: JSON.stringify(rec)
         });
