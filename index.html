@@ -260,21 +260,33 @@ function clearPhotos() {
 
 }async function sendOnline(rec) {
 
+    console.log("OBJETO ENVIADO:");
+    console.log(rec);
+
+    console.log("JSON:");
+    console.log(JSON.stringify(rec));
+
     try {
 
-        await fetch(ENDPOINT, {
+        const response = await fetch(ENDPOINT, {
             method: "POST",
             headers: {
-                "Content-Type": "text/plain;charset=utf-8"
+                "Content-Type": "application/json"
             },
             body: JSON.stringify(rec)
         });
 
-        return true;
+        const txt = await response.text();
+
+        console.log("RESPOSTA APPS SCRIPT:");
+        console.log(txt);
+
+        return txt;
 
     } catch (e) {
 
-        console.error("Erro:", e);
+        console.error("ERRO FETCH:");
+        console.error(e);
 
         return false;
 
