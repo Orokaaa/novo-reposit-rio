@@ -188,10 +188,8 @@ function collect(){const fd=new FormData(document.getElementById('acForm'));cons
 document.getElementById('acForm').addEventListener('submit',async e=>{e.preventDefault();const rec=collect();const resposta = await sendOnline(rec);
 
 alert(
-    "Registro salvo!\n\n" +
-    "Número: " + resposta.numero +
-    "\nPDF: " + resposta.pdf
-);e.target.reset();clearPhotos();('[name="status"]').value='Aberto';document.querySelector('[name="disciplina"]').value='Qualidade';document.querySelector('[name="prioridade"]').value='Média';});
+    "Registro salvo!\n\n")
+;e.target.reset();clearPhotos();('[name="status"]').value='Aberto';document.querySelector('[name="disciplina"]').value='Qualidade';document.querySelector('[name="prioridade"]').value='Média';});
 function renderPhotoPreview() {
 
     const box = document.getElementById("fotoPreview");
