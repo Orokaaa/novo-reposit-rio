@@ -33,6 +33,34 @@
     .thumb img{width:100%;height:82px;object-fit:cover;display:block}.thumb .cap{font-size:11px;color:#6b7280;padding:7px;word-break:break-word}
   </style>
 </head>
+<div id="customAlert" style="
+  display:none;
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  background:#fff;
+  width:350px;
+  padding:20px;
+  border-radius:12px;
+  box-shadow:0 10px 30px rgba(0,0,0,.3);
+  text-align:center;
+  z-index:9999;">
+
+    <h3 style="
+    margin-top:0;
+    color:#2154b8;
+    font-size:22px;
+    font-weight:700;">
+    Formulário de Campo:
+    <span id="customAlertText" style="color:#ea580c;"></span>
+    </h3>
+
+    <button onclick="fecharAlerta()" class="btn primary">
+        OK
+    </button>
+
+</div>
 <body>
   <header>
   <div class="wrap brand">
@@ -187,8 +215,9 @@ function collect(){const fd=new FormData(document.getElementById('acForm'));cons
 }}
 document.getElementById('acForm').addEventListener('submit',async e=>{e.preventDefault();const rec=collect();const resposta = await sendOnline(rec);
 
-alert(
-    "Registro salvo!\n\n")
+mostrarAlerta(
+    "Registro salvo!")
+
 ;e.target.reset();clearPhotos();('[name="status"]').value='Aberto';document.querySelector('[name="disciplina"]').value='Qualidade';document.querySelector('[name="prioridade"]').value='Média';});
 function renderPhotoPreview() {
 
@@ -294,6 +323,14 @@ function clearPhotos() {
 
 })();
   document.querySelector('[name="numero"]').value = id();
+function mostrarAlerta(msg) {
+    document.getElementById("customAlertText").innerText = msg;
+    document.getElementById("customAlert").style.display = "flex";
+}
+
+function fecharAlerta() {
+    document.getElementById("customAlert").style.display = "none";
+}
 </script>
 <form action="https://script.google.com/macros/s/AKfycbxPMDhqp5fbteQeg-KkI84LSiwr2YvV0rs1UOBA3sq28KcmKbfere_pXEomTvg9M1Sm/exec" method="post"></form>
 </body>
