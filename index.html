@@ -31,6 +31,13 @@
     .photo-preview{display:grid;grid-template-columns:repeat(auto-fill,minmax(105px,1fr));gap:12px;margin-top:12px}
     .thumb{border:1px solid #eadfd0;border-radius:14px;background:#fff;overflow:hidden;box-shadow:0 8px 18px rgba(88,64,35,.12)}
     .thumb img{width:100%;height:82px;object-fit:cover;display:block}.thumb .cap{font-size:11px;color:#6b7280;padding:7px;word-break:break-word}
+    
+      @media print {
+    #customAlert {
+        display: none !important;
+    }
+}
+
   </style>
 </head>
 <div id="customAlert" style="
@@ -213,12 +220,27 @@ function diasAbertos(data,status){if(!data||status==='Concluído')return 0;let i
 function collect(){const fd=new FormData(document.getElementById('acForm'));const dataReg=nowLocal();const status=val(fd,'status')||'Aberto';const fotosNomes=selectedPhotos.map(f=>f.name).join('\n');return {
 "ID":id(),"Data Registro":dataReg,"Nº AC/RNC/SIT":val(fd,'numero'),"Tipo Documento":val(fd,'tipo'),"Contratada":val(fd,'contratada'),"Contrato":val(fd,'contrato'),"Data Documento":val(fd,'dataDocumento'),"Escopo":val(fd,'escopo'),"Área":val(fd,'area'),"Assunto":val(fd,'assunto'),"Impacta Outra Disciplina?":val(fd,'impactaDisc'),"Qual Disciplina":val(fd,'qualDisciplina'),"Impacta Custo/Prazo?":val(fd,'impactaCusto'),"Qual Impacto":val(fd,'qualImpacto'),"Descrição":val(fd,'descricao'),"Docs Referência":docs(fd),"Solução Proposta":val(fd,'solucao'),"Originado Por":val(fd,'originadoPor'),"Disciplina":val(fd,'disciplina'),"Comentários/Recomendações":val(fd,'comentarios'),"Necessita SM?":val(fd,'sm'),"Qualidade - Nome":val(fd,'qualNome'),"Qualidade - Data":val(fd,'qualData'),"Fornecedor/Engenharia - Nome":val(fd,'fornNome'),"Fornecedor/Engenharia - Data":val(fd,'fornData'),"Fiscalização Vale - Nome":val(fd,'valeNome'),"Fiscalização Vale - Data":val(fd,'valeData'),"Status":status,"Responsável":val(fd,'responsavel'),"Prazo":val(fd,'prazo'),"Dias em Aberto":diasAbertos(dataReg,status),"Prioridade":val(fd,'prioridade'),"Link Evidência":val(fd,'evidencia'),"Observações Controle":val(fd,'obsControle'),"Fotos - Qtd":selectedPhotos.length,"Fotos - Nomes":fotosNomes,"Links das Fotos":"","Fotos - Arquivos":selectedPhotos
 }}
-document.getElementById('acForm').addEventListener('submit',async e=>{e.preventDefault();const rec=collect();const resposta = await sendOnline(rec);
+document.getElementById('acForm').addEventListener('submit', async e => {
+    e.preventDefault();
 
-mostrarAlerta(
-    "Registro salvo!")
+    const rec = collect();
+    const resposta = await sendOnline(rec);
 
-;e.target.reset();clearPhotos();('[name="status"]').value='Aberto';document.querySelector('[name="disciplina"]').value='Qualidade';document.querySelector('[name="prioridade"]').value='Média';});
+    mostrarAlerta("Registro salvo!");
+
+    // Abre a impressão
+    window.print();
+
+    e.target.reset();
+    clearPhotos();
+
+    document.querySelector('[name="status"]').value = 'Aberto';
+    document.querySelector('[name="disciplina"]').value = 'Qualidade';
+    document.querySelector('[name="prioridade"]').value = 'Média';
+
+    // Gera um novo número para o próximo registro
+    document.querySelector('[name="numero"]').value = id();
+});
 function renderPhotoPreview() {
 
     const box = document.getElementById("fotoPreview");
