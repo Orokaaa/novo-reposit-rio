@@ -32,11 +32,16 @@
     .thumb{border:1px solid #eadfd0;border-radius:14px;background:#fff;overflow:hidden;box-shadow:0 8px 18px rgba(88,64,35,.12)}
     .thumb img{width:100%;height:82px;object-fit:cover;display:block}.thumb .cap{font-size:11px;color:#6b7280;padding:7px;word-break:break-word}
     
-      @media print {
-    #customAlert {
-        display: none !important;
-    }
+    .btn:disabled{
+      opacity: .6;
+      cursor: not-allowed;
+      transform: none;
 }
+      @media print {
+        #customAlert {
+        display: none !important;
+        }
+        }
 
   </style>
 </head>
@@ -190,7 +195,7 @@
             <div><label>Link da Evidência</label><input name="evidencia" placeholder="URL, pasta ou evidência"></div>
           </div>
           <div><label>Observações do Controle</label><textarea name="obsControle" placeholder="Observações de acompanhamento, pendências ou conclusão."></textarea></div>
-          <div class="actions"><button class="btn primary" type="submit">Salvar Registro</button><button class="btn ok" type="button" onclick="window.print()">Imprimir</button><button class="btn danger" type="button" onclick="clearFormOnly()">Limpar Formulário</button></div>
+          <div class="actions"><button id="btnSalvar" class="btn primary" type="submit">Salvar Registro</button><button class="btn ok" type="button" onclick="window.print()">Imprimir</button><button class="btn danger" type="button" onclick="clearFormOnly()">Limpar Formulário</button></div>
         </form>
       </section>
       <aside class="card" style="margin-top:40px;">
@@ -208,6 +213,7 @@
     <footer>Modelo eletrônico gerado a partir do formulário “Alinhamento de Campo RNC / SIT”.</footer>
   </main>
 <script>
+const btnSalvar = document.getElementById('btnSalvar');
 const ENDPOINT = "https://script.google.com/macros/s/AKfycbwxdBErPdaJ3An1GwiCk8xgrqFIQcC9gZJvpZ_pqVCHKl3g6xAYgXnygtZh256ZCDR6/exec";
 let selectedPhotos = [];
 const MAX_PHOTOS = 8;
@@ -224,23 +230,40 @@ function collect(){const fd=new FormData(document.getElementById('acForm'));cons
 document.getElementById('acForm').addEventListener('submit', async e => {
     e.preventDefault();
 
-    const rec = collect();
-    const resposta = await sendOnline(rec);
+    const btnSalvar = document.querySelector('.btn.primary[type="submit"]');
 
-    mostrarAlerta("Registro salvo!");
+    try {
+        // Bloqueia o botão
+        btnSalvar.disabled = true;
+        btnSalvar.textContent = "Salvando...";
 
-    // Abre a impressão
-    window.print();
+        const rec = collect();
+        const resposta = await sendOnline(rec);
 
-    e.target.reset();
-    clearPhotos();
+        if (!resposta.ok) {
+            throw new Error(resposta.error || "Falha ao salvar");
+        }
 
-    document.querySelector('[name="status"]').value = 'Aberto';
-    document.querySelector('[name="disciplina"]').value = 'Qualidade';
-    document.querySelector('[name="prioridade"]').value = 'Média';
+        mostrarAlerta("Registro salvo!");
 
-    // Gera um novo número para o próximo registro
-    document.querySelector('[name="numero"]').value = id();
+        window.print();
+
+        e.target.reset();
+        clearPhotos();
+
+        document.querySelector('[name="status"]').value = 'Aberto';
+        document.querySelector('[name="disciplina"]').value = 'Qualidade';
+        document.querySelector('[name="prioridade"]').value = 'Média';
+        document.querySelector('[name="numero"]').value = id();
+
+    } catch (erro) {
+        mostrarAlerta("Erro ao salvar: " + erro.message);
+        console.error(erro);
+    } finally {
+        // Reabilita somente após o endpoint responder
+        btnSalvar.disabled = false;
+        btnSalvar.textContent = "Salvar Registro";
+    }
 });
 function renderPhotoPreview() {
 
