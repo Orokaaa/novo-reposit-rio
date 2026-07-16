@@ -113,6 +113,7 @@
           <div class="section-title">Escopo e Impactos</div>
           <div class="row c2">
             <div><label>Assunto</label><input name="assunto" placeholder="Assunto principal"></div>
+            <div><label>Ativo</label><input name="Ativo" placeholder="Ativo principal"></div>
             <div><label class="required">Área</label><select name="area" required><option value="">Selecione</option><option>Tubulação</option><option>Mecânica</option><option>Civil</option><option>Elétrica</option><option>Instrumentação</option><option>Montagem</option><option>Comissionamento</option><option>Segurança</option><option>Qualidade</option><option>Planejamento</option><option>Outros</option></select></div>
           </div>
           <div class="row c2">
@@ -211,14 +212,14 @@ const ENDPOINT = "https://script.google.com/macros/s/AKfycbwxdBErPdaJ3An1GwiCk8x
 let selectedPhotos = [];
 const MAX_PHOTOS = 8;
 const MAX_PHOTO_MB = 7;
-const headers = ["ID","Data Registro","Nº AC/RNC/SIT","Tipo Documento","Contratada","Contrato","Data Documento","Escopo","Área","Assunto","Impacta Outra Disciplina?","Qual Disciplina","Impacta Custo/Prazo?","Qual Impacto","Descrição","Docs Referência","Solução Proposta","Originado Por","Disciplina","Comentários/Recomendações","Necessita SM?","Qualidade - Nome","Qualidade - Data","Fornecedor/Engenharia - Nome","Fornecedor/Engenharia - Data","Fiscalização Vale - Nome","Fiscalização Vale - Data","Status","Responsável","Prazo","Dias em Aberto","Prioridade","Link Evidência","Observações Controle","Fotos - Qtd","Fotos - Nomes","Links das Fotos","PDF"];
+const headers = ["ID","Data Registro","Nº AC/RNC/SIT","Tipo Documento","Contratada","Contrato","Data Documento","Ativo","Área","Assunto","Impacta Outra Disciplina?","Qual Disciplina","Impacta Custo/Prazo?","Qual Impacto","Descrição","Docs Referência","Solução Proposta","Originado Por","Disciplina","Comentários/Recomendações","Necessita SM?","Qualidade - Nome","Qualidade - Data","Fornecedor/Engenharia - Nome","Fornecedor/Engenharia - Data","Fiscalização Vale - Nome","Fiscalização Vale - Data","Status","Responsável","Prazo","Dias em Aberto","Prioridade","Link Evidência","Observações Controle","Fotos - Qtd","Fotos - Nomes","Links das Fotos","PDF"];
 function nowLocal(){const d=new Date();return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,19).replace('T',' ')}
 function id(){const d=new Date();const pad=n=>String(n).padStart(2,'0');return `AC-${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}-${pad(d.getHours())}${pad(d.getMinutes())}${pad(d.getSeconds())}`}
 function val(fd,n){return (fd.get(n)||'').toString().trim()}
 function docs(fd){let out=[];for(let i=1;i<=4;i++){let d=val(fd,'doc'+i),r=val(fd,'rev'+i),t=val(fd,'tit'+i);if(d||r||t)out.push(`${d} | Rev. ${r} | ${t}`)}return out.join('\n')}
 function diasAbertos(data,status){if(!data||status==='Concluído')return 0;let ini=new Date(data.replace(' ','T'));let ms=Date.now()-ini.getTime();return Math.max(0,Math.floor(ms/86400000))}
 function collect(){const fd=new FormData(document.getElementById('acForm'));const dataReg=nowLocal();const status=val(fd,'status')||'Aberto';const fotosNomes=selectedPhotos.map(f=>f.name).join('\n');return {
-"ID":id(),"Data Registro":dataReg,"Nº AC/RNC/SIT":val(fd,'numero'),"Tipo Documento":val(fd,'tipo'),"Contratada":val(fd,'contratada'),"Contrato":val(fd,'contrato'),"Data Documento":val(fd,'dataDocumento'),"Escopo":val(fd,'escopo'),"Área":val(fd,'area'),"Assunto":val(fd,'assunto'),"Impacta Outra Disciplina?":val(fd,'impactaDisc'),"Qual Disciplina":val(fd,'qualDisciplina'),"Impacta Custo/Prazo?":val(fd,'impactaCusto'),"Qual Impacto":val(fd,'qualImpacto'),"Descrição":val(fd,'descricao'),"Docs Referência":docs(fd),"Solução Proposta":val(fd,'solucao'),"Originado Por":val(fd,'originadoPor'),"Disciplina":val(fd,'disciplina'),"Comentários/Recomendações":val(fd,'comentarios'),"Necessita SM?":val(fd,'sm'),"Qualidade - Nome":val(fd,'qualNome'),"Qualidade - Data":val(fd,'qualData'),"Fornecedor/Engenharia - Nome":val(fd,'fornNome'),"Fornecedor/Engenharia - Data":val(fd,'fornData'),"Fiscalização Vale - Nome":val(fd,'valeNome'),"Fiscalização Vale - Data":val(fd,'valeData'),"Status":status,"Responsável":val(fd,'responsavel'),"Prazo":val(fd,'prazo'),"Dias em Aberto":diasAbertos(dataReg,status),"Prioridade":val(fd,'prioridade'),"Link Evidência":val(fd,'evidencia'),"Observações Controle":val(fd,'obsControle'),"Fotos - Qtd":selectedPhotos.length,"Fotos - Nomes":fotosNomes,"Links das Fotos":"","Fotos - Arquivos":selectedPhotos
+"ID":id(),"Data Registro":dataReg,"Nº AC/RNC/SIT":val(fd,'numero'),"Tipo Documento":val(fd,'tipo'),"Contratada":val(fd,'contratada'),"Contrato":val(fd,'contrato'),"Data Documento":val(fd,'dataDocumento'),"Ativo":val(fd,'Ativo'),"Área":val(fd,'area'),"Assunto":val(fd,'assunto'),"Impacta Outra Disciplina?":val(fd,'impactaDisc'),"Qual Disciplina":val(fd,'qualDisciplina'),"Impacta Custo/Prazo?":val(fd,'impactaCusto'),"Qual Impacto":val(fd,'qualImpacto'),"Descrição":val(fd,'descricao'),"Docs Referência":docs(fd),"Solução Proposta":val(fd,'solucao'),"Originado Por":val(fd,'originadoPor'),"Disciplina":val(fd,'disciplina'),"Comentários/Recomendações":val(fd,'comentarios'),"Necessita SM?":val(fd,'sm'),"Qualidade - Nome":val(fd,'qualNome'),"Qualidade - Data":val(fd,'qualData'),"Fornecedor/Engenharia - Nome":val(fd,'fornNome'),"Fornecedor/Engenharia - Data":val(fd,'fornData'),"Fiscalização Vale - Nome":val(fd,'valeNome'),"Fiscalização Vale - Data":val(fd,'valeData'),"Status":status,"Responsável":val(fd,'responsavel'),"Prazo":val(fd,'prazo'),"Dias em Aberto":diasAbertos(dataReg,status),"Prioridade":val(fd,'prioridade'),"Link Evidência":val(fd,'evidencia'),"Observações Controle":val(fd,'obsControle'),"Fotos - Qtd":selectedPhotos.length,"Fotos - Nomes":fotosNomes,"Links das Fotos":"","Fotos - Arquivos":selectedPhotos
 }}
 document.getElementById('acForm').addEventListener('submit', async e => {
     e.preventDefault();
@@ -354,6 +355,7 @@ function fecharAlerta() {
     document.getElementById("customAlert").style.display = "none";
 }
 </script>
-<form action="https://script.google.com/macros/s/AKfycbxPMDhqp5fbteQeg-KkI84LSiwr2YvV0rs1UOBA3sq28KcmKbfere_pXEomTvg9M1Sm/exec" method="post"></form>
 </body>
+
+
 </html>
